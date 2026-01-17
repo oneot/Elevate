@@ -106,54 +106,6 @@
         transform: translateX(0) !important;
       }
     }
-    /* ===== KR SVG Map Styling ===== */
-    #kr-map-wrap svg {
-      width: 100%;
-      height: 100%;
-    }
-    
-    #kr-map-wrap .region {
-      fill: transparent;                /* ✅ 초록색 없음(투명) */
-      stroke: rgba(0,120,212,0.28);     /* 은은한 MS 블루 */
-      stroke-width: 2;
-      transition: fill 250ms ease, stroke 250ms ease, filter 250ms ease;
-      cursor: pointer;
-    }
-    
-    #kr-map-wrap .region:hover {
-      fill: rgba(0,120,212,0.08);       /* 웹 hover 시 살짝만 */
-      stroke: rgba(0,120,212,0.6);
-      filter: drop-shadow(0 12px 24px rgba(0,120,212,0.12));
-    }
-    
-    #kr-map-wrap .region.is-active {
-      fill: rgba(0,120,212,0.10);       /* 모바일 in-view / 선택 시 */
-      stroke: rgba(0,120,212,0.75);
-      filter: drop-shadow(0 12px 28px rgba(0,120,212,0.16));
-    }
-    
-    /* 오버레이 점선 (애니메이션) */
-    #kr-overlay .route {
-      fill: none;
-      stroke: rgba(2,132,199,0.35);
-      stroke-width: 2;
-      stroke-dasharray: 6 8;
-      animation: dash 22s linear infinite;
-    }
-    @keyframes dash { to { stroke-dashoffset: -800; } }
-    
-    #kr-overlay .pin {
-      fill: rgba(255,255,255,0.95);
-      stroke: #0078D4;
-      stroke-width: 2;
-    }
-    
-    /* 모바일 중앙 도달시 “자동 하이라이트” (hover 대체) */
-    @media (hover: none) and (pointer: coarse) {
-      #kr-map-wrap .region {
-        transition: fill 350ms ease, stroke 350ms ease, filter 350ms ease;
-      }
-    }
   </style>
 </head>
 
@@ -227,13 +179,49 @@
     </div>
 
     <div class="lg:w-1/2 relative flex justify-center items-center h-[500px] lg:h-[750px] w-full map-container">
-      <!-- ✅ kr.svg가 여기로 주입됨 -->
-      <div id="kr-map-wrap" class="relative w-full h-full"></div>
-    
-      <!-- ✅ 점선/포인트 오버레이 -->
-      <svg id="kr-overlay" class="absolute inset-0 w-full h-full pointer-events-none"></svg>
-    
-      <!-- tooltip (기존 그대로 유지) -->
+      <svg viewBox="0 0 400 550" class="w-full h-full drop-shadow-2xl" id="korea-map" xmlns="http://www.w3.org/2000/svg">
+        <path id="korea-outline"
+              d="M165 40 L190 45 L220 55 L235 80 L245 120 L260 160 L280 220 L300 280 L310 350 L305 420 L285 460 L260 490 L230 500 L190 495 L160 480 L130 460 L100 440 L85 400 L95 350 L80 300 L90 240 L105 180 L115 130 L130 80 L150 50 Z"
+              fill="rgba(255,255,255,0.6)"
+              stroke="rgba(0,120,212,0.3)"
+              stroke-width="2" />
+
+        <g class="map-line" fill="none" stroke-linecap="round">
+          <path d="M155 135 L220 110" />
+          <path d="M155 135 L175 220" />
+          <path d="M175 220 L240 320" />
+          <path d="M175 220 L135 340" />
+          <path d="M135 340 L145 420" />
+          <path d="M240 320 L260 410" />
+          <path d="M145 420 Q 150 480 155 510" />
+        </g>
+
+        <g id="map-points">
+          <circle cx="155" cy="135" r="7" class="map-point" data-key="Seoul" />
+          <circle cx="135" cy="130" r="5" class="map-point" data-key="Incheon" />
+          <circle cx="165" cy="115" r="10" class="map-point" data-key="Gyeonggi" style="opacity:0.5" />
+
+          <circle cx="230" cy="105" r="6" class="map-point" data-key="Gangwon" />
+
+          <circle cx="180" cy="210" r="5" class="map-point" data-key="Sejong" />
+          <circle cx="205" cy="195" r="5" class="map-point" data-key="Chungbuk" />
+          <circle cx="190" cy="235" r="6" class="map-point" data-key="Daejeon" />
+          <circle cx="150" cy="225" r="5" class="map-point" data-key="Chungnam" />
+
+          <circle cx="255" cy="290" r="6" class="map-point" data-key="Gyeongbuk" />
+          <circle cx="245" cy="330" r="6" class="map-point" data-key="Daegu" />
+          <circle cx="285" cy="355" r="5" class="map-point" data-key="Ulsan" />
+          <circle cx="270" cy="405" r="7" class="map-point" data-key="Busan" />
+          <circle cx="230" cy="400" r="6" class="map-point" data-key="Gyeongnam" />
+
+          <circle cx="140" cy="330" r="6" class="map-point" data-key="Jeonbuk" />
+          <circle cx="145" cy="385" r="6" class="map-point" data-key="Gwangju" />
+          <circle cx="125" cy="430" r="7" class="map-point" data-key="Jeonnam" />
+
+          <circle cx="155" cy="520" r="6" class="map-point" data-key="JeJu" />
+        </g>
+      </svg>
+
       <div id="tooltip" class="absolute bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-xl -translate-y-10 opacity-0 transition-opacity pointer-events-none z-20">
         <span id="tooltip-text">지역 선택</span>
         <div class="absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-800 rotate-45"></div>
@@ -475,212 +463,106 @@
       });
     });
 
+    const offices = {
+      Seoul: "https://o365.sen.go.kr",
+      Incheon: "https://o365.ice.go.kr",
+      Gyeonggi: "https://cloud.goe.go.kr",
+      Gangwon: "https://office365.gwe.go.kr",
+      Sejong: "https://o365.sje.go.kr",
+      Chungbuk: "https://cloud.cbe.go.kr",
+      Chungnam: "https://o365.cne.go.kr",
+      Daejeon: "https://www.dje365.kr",
+      Gyeongbuk: "https://365.gyo6.net",
+      Daegu: "https://www.o365.dge.go.kr",
+      Ulsan: "https://o365.use.go.kr",
+      Busan: "https://o365.pen.go.kr",
+      Gyeongnam: "https://sw-ms.gne.go.kr",
+      Jeonbuk: "https://getsw.jbe.go.kr",
+      Jeonnam: "https://o365.jne.go.kr/",
+      Gwangju: "https://o365.gen.go.kr",
+      JeJu: "https://o365.jje.go.kr/",
+    };
 
-    (() => {
-      // ===== 0) 교육청 링크/이름 매핑 =====
-      const offices = {
-        Seoul: "https://o365.sen.go.kr",
-        Incheon: "https://o365.ice.go.kr",
-        Gyeonggi: "https://cloud.goe.go.kr",
-        Gangwon: "https://office365.gwe.go.kr",
-        Sejong: "https://o365.sje.go.kr",
-        Chungbuk: "https://cloud.cbe.go.kr",
-        Chungnam: "https://o365.cne.go.kr",
-        Daejeon: "https://www.dje365.kr",
-        Gyeongbuk: "https://365.gyo6.net",
-        Daegu: "https://www.o365.dge.go.kr",
-        Ulsan: "https://o365.use.go.kr",
-        Busan: "https://o365.pen.go.kr",
-        Gyeongnam: "https://sw-ms.gne.go.kr",
-        Jeonbuk: "https://getsw.jbe.go.kr",
-        Jeonnam: "https://o365.jne.go.kr/",
-        Gwangju: "https://o365.gen.go.kr",
-        JeJu: "https://o365.jje.go.kr/",
-      };
-    
-      const officeNames = {
-        Seoul: "서울교육청",
-        Incheon: "인천교육청",
-        Gyeonggi: "경기교육청",
-        Gangwon: "강원교육청",
-        Sejong: "세종교육청",
-        Chungbuk: "충북교육청",
-        Chungnam: "충남교육청",
-        Daejeon: "대전교육청",
-        Gyeongbuk: "경북교육청",
-        Daegu: "대구교육청",
-        Ulsan: "울산교육청",
-        Busan: "부산교육청",
-        Gyeongnam: "경남교육청",
-        Jeonbuk: "전북교육청",
-        Jeonnam: "전남교육청",
-        Gwangju: "광주교육청",
-        JeJu: "제주교육청",
-      };
-    
-      const normalizeUrl = (u) => {
-        if (!u) return "";
-        if (u.startsWith("http://") || u.startsWith("https://")) return u;
-        return "https://" + u.replace(/^\/+/, "");
-      };
-    
-      // ===== 1) kr.svg 로드 & 주입 =====
-      const wrap = document.getElementById("kr-map-wrap");
-      const overlay = document.getElementById("kr-overlay");
-      const tooltip = document.getElementById("tooltip");
-      const tooltipText = document.getElementById("tooltip-text");
-      const mapContainer = document.querySelector(".map-container");
-    
-      async function loadSVG() {
-        const res = await fetch("/assets/kr.svg", { cache: "no-cache" });
-        const svgText = await res.text();
-        wrap.innerHTML = svgText;
-    
-        const svg = wrap.querySelector("svg");
-        if (!svg) return;
-    
-        // ✅ overlay를 kr.svg의 viewBox와 맞추기
-        const vb = svg.getAttribute("viewBox") || "0 0 1000 1000";
-        overlay.setAttribute("viewBox", vb);
-    
-        // ✅ SVG 내부 path들에 region 클래스 부여 (id가 있는 것만)
-        Object.keys(offices).forEach((key) => {
-          const el = svg.querySelector(`#${CSS.escape(key)}`);
-          if (!el) return;
-          el.classList.add("region");
-          el.dataset.key = key;
+    const officeNames = {
+      Gyeongnam: "경남교육청",
+      Daegu: "대구교육청",
+      Seoul: "서울교육청",
+      Busan: "부산교육청",
+      Incheon: "인천교육청",
+      Gyeonggi: "경기교육청",
+      Sejong: "세종교육청",
+      Chungbuk: "충북교육청",
+      Ulsan: "울산교육청",
+      Chungnam: "충남교육청",
+      Gyeongbuk: "경북교육청",
+      JeJu: "제주교육청",
+      Daejeon: "대전교육청",
+      Jeonnam: "전남교육청",
+      Jeonbuk: "전북교육청",
+      Gwangju: "광주교육청",
+      Gangwon: "강원교육청",
+    };
+
+    // 2) Map Interaction Logic (stable)
+    const mapPoints = document.querySelectorAll(".map-point");
+    const tooltip = document.getElementById("tooltip");
+    const mapContainer = document.querySelector(".map-container");
+
+    tooltip.innerHTML = `
+      <span id="tooltip-text">지역 선택</span>
+      <div class="absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-800 rotate-45"></div>
+    `;
+    const tooltipText = document.getElementById("tooltip-text");
+
+    const normalizeUrl = (u) => {
+      if (!u) return "";
+      if (u.startsWith("http://") || u.startsWith("https://")) return u;
+      return "https://" + u.replace(/^\/+/, "");
+    };
+
+    mapPoints.forEach((point) => {
+      const key = point.dataset.key;
+      const name = officeNames[key] || key || "지역";
+      const url = normalizeUrl(offices[key]);
+
+      const r0 = Number(point.dataset.r || point.getAttribute("r") || 5);
+      point.dataset.r0 = String(r0);
+
+      point.addEventListener("mouseenter", () => {
+        tooltipText.textContent = name;
+        tooltip.style.opacity = "1";
+
+        gsap.to(point, {
+          attr: { r: Math.max(9, r0 + 3) },
+          fill: "#0078D4",
+          duration: 0.2,
+          overwrite: "auto",
         });
-    
-        bindRegionEvents(svg);
-        drawPinsAndRoutes(svg);
-        setupMobileCenterReveal(svg);
-      }
-    
-      // ===== 2) 지역 이벤트(hover/click/tooltip) =====
-      function bindRegionEvents(svg) {
-        const regions = svg.querySelectorAll(".region");
-    
-        regions.forEach((r) => {
-          r.addEventListener("mouseenter", () => {
-            const key = r.dataset.key;
-            tooltipText.textContent = officeNames[key] || key;
-            tooltip.style.opacity = "1";
-          });
-    
-          r.addEventListener("mousemove", (e) => {
-            const rect = mapContainer.getBoundingClientRect();
-            tooltip.style.left = `${e.clientX - rect.left}px`;
-            tooltip.style.top = `${e.clientY - rect.top - 40}px`;
-          });
-    
-          r.addEventListener("mouseleave", () => {
-            tooltip.style.opacity = "0";
-          });
-    
-          r.addEventListener("click", () => {
-            const key = r.dataset.key;
-            const url = normalizeUrl(offices[key]);
-            const name = officeNames[key] || key;
-            if (!url) return;
-    
-            if (confirm(`${name} M365 지원 페이지로 이동하여\n계정 문제를 해결하시겠습니까?`)) {
-              window.open(url, "_blank", "noopener,noreferrer");
-            }
-          });
-        });
-      }
-    
-      // ===== 3) 포인트/점선(오버레이) 그리기 =====
-      // 좌표는 kr.svg viewBox 기준으로 맞춰야 함.
-      // 아래 값은 "예시"야. (너 kr.svg viewBox에 따라 보정 필요)
-      // 보정 방법: console 좌표 찍어서 맞추면 5분 안에 끝남(아래 calibrator 제공)
-      const pins = [
-        { key: "Seoul",   x: 360, y: 180 },
-        { key: "Incheon", x: 330, y: 190 },
-        { key: "Gyeonggi",x: 390, y: 210 },
-        { key: "Gangwon", x: 520, y: 190 },
-        { key: "Sejong",  x: 410, y: 310 },
-        { key: "Chungbuk",x: 460, y: 300 },
-        { key: "Daejeon", x: 430, y: 350 },
-        { key: "Chungnam",x: 370, y: 350 },
-        { key: "Gyeongbuk",x: 560, y: 430 },
-        { key: "Daegu",   x: 540, y: 500 },
-        { key: "Ulsan",   x: 650, y: 540 },
-        { key: "Busan",   x: 620, y: 590 },
-        { key: "Gyeongnam",x: 520, y: 590 },
-        { key: "Jeonbuk", x: 360, y: 520 },
-        { key: "Gwangju", x: 340, y: 600 },
-        { key: "Jeonnam", x: 300, y: 660 },
-        { key: "JeJu",    x: 240, y: 850 },
-      ];
-    
-      function drawPinsAndRoutes(svg) {
-        overlay.innerHTML = "";
-    
-        // 점선 경로(예시)
-        const route = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        route.setAttribute("d",
-          `M ${pins[0].x} ${pins[0].y}
-           L ${pins[4].x} ${pins[4].y}
-           L ${pins[9].x} ${pins[9].y}
-           L ${pins[12].x} ${pins[12].y}
-           L ${pins[16].x} ${pins[16].y}`
-        );
-        route.setAttribute("class", "route");
-        overlay.appendChild(route);
-    
-        // 핀
-        pins.forEach(p => {
-          const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-          c.setAttribute("cx", p.x);
-          c.setAttribute("cy", p.y);
-          c.setAttribute("r", 7);
-          c.setAttribute("class", "pin");
-          overlay.appendChild(c);
-        });
-      }
-
-  // ===== 4) 모바일: 중앙 근처에서 지역/점선 강조 (hover 대체) =====
-  function setupMobileCenterReveal(svg) {
-    const isTouch = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-    if (!isTouch) return;
-
-    const regions = [...svg.querySelectorAll(".region")];
-    if (!regions.length) return;
-
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        // 중앙 근처 도달하면 강조
-        if (e.isIntersecting) e.target.classList.add("is-active");
-        else e.target.classList.remove("is-active");
       });
-    }, {
-      root: null,
-      rootMargin: "-35% 0px -35% 0px",
-      threshold: 0.01
+
+      point.addEventListener("mousemove", (e) => {
+        const rect = mapContainer.getBoundingClientRect();
+        tooltip.style.left = `${e.clientX - rect.left}px`;
+        tooltip.style.top = `${e.clientY - rect.top - 40}px`;
+      });
+
+      point.addEventListener("mouseleave", () => {
+        tooltip.style.opacity = "0";
+        gsap.to(point, {
+          attr: { r: Number(point.dataset.r0) },
+          fill: "rgba(255,255,255,0.95)",
+          duration: 0.2,
+          overwrite: "auto",
+        });
+      });
+
+      point.addEventListener("click", () => {
+        if (!url) return;
+        if (confirm(`${name} M365 지원 페이지로 이동하여\n계정 문제를 해결하시겠습니까?`)) {
+          window.open(url, "_blank", "noopener,noreferrer");
+        }
+      });
     });
-
-    regions.forEach(r => io.observe(r));
-  }
-
-  // ===== 5) 좌표 보정용 캘리브레이터(개발용) =====
-  // kr.svg 위 아무 곳이나 클릭하면 해당 viewBox 좌표를 콘솔에 찍어줌
-  function enableCalibrator() {
-    overlay.style.pointerEvents = "auto";
-    overlay.addEventListener("click", (e) => {
-      const pt = overlay.createSVGPoint();
-      pt.x = e.clientX;
-      pt.y = e.clientY;
-      const svgP = pt.matrixTransform(overlay.getScreenCTM().inverse());
-      console.log(`SVG coords: x=${svgP.x.toFixed(0)}, y=${svgP.y.toFixed(0)}`);
-    });
-  }
-
-  loadSVG().then(() => {
-    // 필요하면 개발 중에만 켜고, 좌표 다 맞추면 끄면 됨
-    // enableCalibrator();
-  });
-})();
 
     // ===== Mobile scroll reveal for product cards (hover 대체) =====
     (() => {
