@@ -89,29 +89,28 @@
             border-color: #0078D4;
         }
 
-        /* Map Styles */
+        /* dashed animation 더 정교하게 */
         .map-line {
-            stroke: #CBD5E1; /* 연한 회색 선 */
-            stroke-width: 1.5;
-            stroke-dasharray: 5;
-            animation: dash 30s linear infinite;
+          stroke: rgba(2, 132, 199, 0.35);
+          stroke-width: 1.6;
+          stroke-dasharray: 6 8;
+          animation: dash 22s linear infinite;
         }
         
         @keyframes dash {
-            to { stroke-dashoffset: 1000; }
-        }
-
-        .map-point {
-            cursor: pointer;
-            fill: white;
-            stroke: #0078D4;
-            stroke-width: 2;
-            transition: all 0.3s ease;
+          to { stroke-dashoffset: -800; }
         }
         
+        /* 점: outline과 어울리게 */
+        .map-point {
+          cursor: pointer;
+          fill: rgba(255,255,255,0.95);
+          stroke: #0078D4;
+          stroke-width: 2;
+          transition: transform 0.2s ease;
+        }
         .map-point:hover {
-            fill: #0078D4;
-            r: 8;
+          transform: scale(1.05);
         }
 
         /* Text Gradient */
@@ -403,85 +402,113 @@
     </footer>
 
     <script>
-        // 1. GSAP Animation Init
-        gsap.registerPlugin(ScrollTrigger);
-
-        // 히어로 텍스트 등장 (순차적)
-        gsap.from(".hero-text > *", {
-            y: 30,
-            opacity: 0,
-            duration: 1,
-            stagger: 0.15,
-            ease: "power3.out"
+      // 1. GSAP Animation Init
+      gsap.registerPlugin(ScrollTrigger);
+    
+      // 히어로 텍스트 등장 (순차적)
+      gsap.from(".hero-text > *", {
+        y: 30,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.15,
+        ease: "power3.out",
+      });
+    
+      // 지도 등장
+      gsap.from(".map-container", {
+        scale: 0.95,
+        opacity: 0,
+        duration: 1.2,
+        delay: 0.3,
+        ease: "power3.out",
+      });
+    
+      // 스크롤 시 섹션 등장
+      gsap.utils.toArray(".fade-in-section").forEach((section) => {
+        gsap.from(section, {
+          scrollTrigger: {
+            trigger: section,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+          y: 40,
+          opacity: 0,
+          duration: 0.8,
+          ease: "power3.out",
         });
-
-        // 지도 등장
-        gsap.from(".map-container", {
-            scale: 0.95,
-            opacity: 0,
-            duration: 1.2,
-            delay: 0.3,
-            ease: "power3.out"
+      });
+    
+      // 2. Map Interaction Logic (fixed)  ✅ 여기부터 아래 블록이 교체된 부분
+      const mapPoints = document.querySelectorAll(".map-point");
+      const tooltip = document.getElementById("tooltip");
+      const mapContainer = document.querySelector(".map-container");
+    
+      // URL 프로토콜 보정 (예: www.o365.dge.go.kr)
+      const normalizeUrl = (u) => {
+        if (!u) return "";
+        if (u.startsWith("http://") || u.startsWith("https://")) return u;
+        return "https://" + u.replace(/^\/+/, "");
+      };
+    
+      // tooltip 화살표 element는 재사용 (매번 innerHTML로 덮지 않기)
+      tooltip.textContent = "지역 선택";
+      const arrow = document.createElement("div");
+      arrow.className =
+        "absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-800 rotate-45";
+      tooltip.appendChild(arrow);
+    
+      mapPoints.forEach((point) => {
+        // ✅ 원래 r 저장
+        const r0 = Number(point.getAttribute("r") || 5);
+        point.dataset.r0 = String(r0);
+    
+        point.addEventListener("mouseenter", () => {
+          const name = point.getAttribute("data-name") || "지역";
+    
+          // tooltip 텍스트만 업데이트 (안전)
+          tooltip.firstChild.textContent = name;
+          tooltip.style.opacity = "1";
+    
+          // 포인트 강조: 원래 값 기준으로 확대
+          gsap.to(point, {
+            attr: { r: Math.max(9, r0 + 3) },
+            fill: "#0078D4",
+            duration: 0.25,
+          });
         });
-
-        // 스크롤 시 섹션 등장
-        gsap.utils.toArray('.fade-in-section').forEach(section => {
-            gsap.from(section, {
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top 85%",
-                    toggleActions: "play none none reverse"
-                },
-                y: 40,
-                opacity: 0,
-                duration: 0.8,
-                ease: "power3.out"
-            });
+    
+        point.addEventListener("mousemove", (e) => {
+          const rect = mapContainer.getBoundingClientRect();
+          tooltip.style.left = e.clientX - rect.left + "px";
+          tooltip.style.top = e.clientY - rect.top - 40 + "px";
         });
-
-        // 2. Map Interaction Logic
-        const mapPoints = document.querySelectorAll('.map-point');
-        const tooltip = document.getElementById('tooltip');
-        const mapContainer = document.querySelector('.map-container');
-        
-        mapPoints.forEach(point => {
-            point.addEventListener('mouseenter', (e) => {
-                const name = point.getAttribute('data-name');
-                tooltip.innerHTML = `${name}<div class='absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-800 rotate-45'></div>`;
-                tooltip.style.opacity = '1';
-                
-                // 포인트 강조
-                gsap.to(point, { 
-                    attr: { r: 10 }, 
-                    fill: "#0078D4", 
-                    duration: 0.3 
-                });
-            });
-
-            point.addEventListener('mousemove', (e) => {
-                const rect = mapContainer.getBoundingClientRect();
-                tooltip.style.left = (e.clientX - rect.left) + 'px';
-                tooltip.style.top = (e.clientY - rect.top - 40) + 'px';
-            });
-
-            point.addEventListener('mouseleave', () => {
-                tooltip.style.opacity = '0';
-                gsap.to(point, { 
-                    attr: { r: point.getAttribute('data-name').includes('경기') ? 10 : (point.getAttribute('data-name').includes('서울') ? 6 : 5) }, // 원래 사이즈로 복귀
-                    fill: "white", 
-                    duration: 0.3 
-                });
-            });
-
-            point.addEventListener('click', () => {
-                const url = point.getAttribute('data-url');
-                const name = point.getAttribute('data-name');
-                if(confirm(`${name} M365 지원 페이지로 이동하여\n계정 문제를 해결하시겠습니까?`)) {
-                    window.open(url, '_blank');
-                }
-            });
+    
+        point.addEventListener("mouseleave", () => {
+          tooltip.style.opacity = "0";
+    
+          // ✅ 저장해둔 원래 r로 정확히 복귀
+          gsap.to(point, {
+            attr: { r: Number(point.dataset.r0) },
+            fill: "white",
+            duration: 0.25,
+          });
         });
-
+    
+        point.addEventListener("click", () => {
+          const name = point.getAttribute("data-name") || "해당 지역";
+          const url = normalizeUrl(point.getAttribute("data-url"));
+    
+          if (!url) return;
+    
+          if (
+            confirm(
+              `${name} M365 지원 페이지로 이동하여\n계정 문제를 해결하시겠습니까?`
+            )
+          ) {
+            window.open(url, "_blank", "noopener,noreferrer");
+          }
+        });
+      });
     </script>
 </body>
 </html>
