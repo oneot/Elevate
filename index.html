@@ -681,7 +681,7 @@
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg text-2xl">🤖</div>
               <div class="text-white">
-                <h3 class="font-bold text-base tracking-wide">Elevate Agent</h3>
+                <h3 class="font-bold text-base tracking-wide">Elevate 무물 에이전트</h3>
                 <div class="flex items-center gap-1.5 opacity-80">
                   <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                   <span class="text-xs font-medium">Online</span>
@@ -723,7 +723,6 @@
             class="w-7 h-7 transition-transform duration-300 group-hover:rotate-12 drop-shadow-md">
             <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
           </svg>
-          
           <span class="absolute top-0 right-0 flex h-4 w-4">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-4 w-4 bg-green-500 border-2 border-white"></span>
@@ -743,54 +742,21 @@
           50% { transform: translateY(-6px); }
         }
         .animate-float-slow { animation: float-slow 3s ease-in-out infinite; }
-        
-        .chat-open .animate-float-slow { 
-          animation: none; 
-          transform: rotate(45deg); 
-          background: rgba(51, 65, 85, 0.9);
-          border-color: transparent;
-        }
+        .chat-open .animate-float-slow { animation: none; transform: rotate(45deg); background: rgba(51, 65, 85, 0.9); border-color: transparent; }
     
-        /* SDK Custom Style */
-        .webchat__send-box {
-          background: rgba(255,255,255,0.8) !important;
-          backdrop-filter: blur(10px);
-          border-top: 1px solid rgba(0,0,0,0.05);
-          margin: 0 !important;
-          padding: 10px !important;
-        }
-        .webchat__send-box__main {
-          border-radius: 999px !important;
-          background: #f1f5f9 !important;
-          border: 1px solid transparent !important;
-          transition: all 0.2s;
-        }
-        .webchat__send-box__main:focus-within {
-          background: white !important;
-          border-color: #0078D4 !important;
-          box-shadow: 0 0 0 3px rgba(0,120,212,0.1);
-        }
+        .webchat__send-box { background: rgba(255,255,255,0.8) !important; backdrop-filter: blur(10px); border-top: 1px solid rgba(0,0,0,0.05); margin: 0 !important; padding: 10px !important; }
+        .webchat__send-box__main { border-radius: 999px !important; background: #f1f5f9 !important; border: 1px solid transparent !important; transition: all 0.2s; }
+        .webchat__send-box__main:focus-within { background: white !important; border-color: #0078D4 !important; box-shadow: 0 0 0 3px rgba(0,120,212,0.1); }
         .webchat__basic-transcript__text { font-family: 'Pretendard', sans-serif !important; }
         
-        /* 대화창 내부 아바타 숨김 (Body) */
-        .webchat__row.webchat__from-bot .webchat__avatar,
-        .webchat__row.webchat__from-user .webchat__avatar {
-           display: none !important;
-        }
+        /* 아바타 숨김 */
+        .webchat__row.webchat__from-bot .webchat__avatar, .webchat__row.webchat__from-user .webchat__avatar { display: none !important; }
   
-        /* 🌟 Thinking Indicator Animation Style */
-        .typing-dot { 
-          width: 8px; height: 8px; 
-          background-color: #0078D4; 
-          border-radius: 50%; 
-          animation: typing-bounce 1.4s infinite ease-in-out both; 
-        }
+        /* Thinking Animation */
+        .typing-dot { width: 8px; height: 8px; background-color: #0078D4; border-radius: 50%; animation: typing-bounce 1.4s infinite ease-in-out both; }
         .typing-dot:nth-child(1) { animation-delay: -0.32s; }
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes typing-bounce { 
-          0%, 80%, 100% { transform: scale(0); opacity: 0.5; } 
-          40% { transform: scale(1); opacity: 1; } 
-        }
+        @keyframes typing-bounce { 0%, 80%, 100% { transform: scale(0); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
       </style>
     
       <script>
@@ -814,73 +780,64 @@
         }
     
         async function loadChat() {
-          // [수정] 중복된 변수 선언 오류 해결
+          // [중요] 사용자의 키 (점(.)이 있다면 토큰이므로 1시간 뒤 만료됩니다. 만료시 화면이 하얗게 뜹니다.)
           const directLineSecret = 'rgfpuYupIP27STK2v0C7jCiBORlq63G3nyUj9Zan58rAp3HAWuSCJQQJ99CBACi5YpzAArohAAABAZBS2kCv.BHfCuXJnH5X8ciQJPMrhYemii9NlbNfkuOoGSIerwxznceY2y0uiJQQJ99CBACi5YpzAArohAAABAZBS1asc';
-    
-          // 1. 미들웨어: 기본 'Typing' 말풍선 숨기기 (오버레이로 대체)
+  
+          // 🚨 안전 장치: WebChat 라이브러리가 로드되었는지 확인
+          if (!window.WebChat) {
+            alert('채팅 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인하거나 페이지를 새로고침 해주세요.');
+            return;
+          }
+  
+          const store = window.WebChat.createStore({}, ({ dispatch, getState }) => next => action => {
+            const result = next(action);
+            const state = getState();
+            // Typing 감지 -> 오버레이 표시
+            const isBotTyping = state.typing && state.typing.some(t => t.role === 'bot');
+            if (isBotTyping) typingOverlay.classList.remove('hidden');
+            else typingOverlay.classList.add('hidden');
+            
+            if (action.type === 'DIRECT_LINE/CONNECT_FULFILLED') {
+              dispatch({ type: 'WEB_CHAT/SEND_EVENT', payload: { name: 'startConversation', type: 'event' } });
+            }
+            return result;
+          });
+          
           const activityMiddleware = () => next => card => {
             if (card.activity.type === 'typing') return () => null;
             return next(card);
           };
-  
-          // 2. 스토어: 봇의 상태를 감시 -> Typing 중이면 오버레이 표시
-          const store = window.WebChat.createStore({}, ({ dispatch, getState }) => next => action => {
-            const result = next(action);
-            
-            // 상태 확인
-            const state = getState();
-            const isBotTyping = state.typing && state.typing.some(t => t.role === 'bot');
-            
-            // 오버레이 토글
-            if (isBotTyping) {
-              typingOverlay.classList.remove('hidden');
-            } else {
-              typingOverlay.classList.add('hidden');
-            }
-            
-            if (action.type === 'DIRECT_LINE/CONNECT_FULFILLED') {
-              dispatch({
-                type: 'WEB_CHAT/SEND_EVENT',
-                payload: { name: 'startConversation', type: 'event' }
-              });
-            }
-            return result;
-          });
     
           const styleOptions = {
             accent: '#0078D4',
             
-            // 대화창 내부 아바타 숨김
-            botAvatarInitials: null, 
-            botAvatarImage: null,
-            userAvatarInitials: null,
-            userAvatarImage: null,
+            // ⚠️ 수정됨: null 대신 빈 문자열 "" 사용 (Crash 방지)
+            botAvatarInitials: "", 
+            botAvatarImage: "",
+            userAvatarInitials: "",
+            userAvatarImage: "",
     
-            // 말풍선 스타일
             bubbleBackground: '#f1f5f9',
             bubbleBorderRadius: 20, 
             bubbleFromUserBackground: '#0078D4',
             bubbleFromUserBorderRadius: 20,
             bubbleFromUserTextColor: 'White',
-            
             rootHeight: '100%',
             rootWidth: '100%',
             backgroundColor: 'transparent',
             hideUploadButton: true,
           };
     
-          const directLine = window.WebChat.createDirectLine({ token: directLineSecret });
-    
-          window.WebChat.renderWebChat(
-            { 
-              directLine: directLine, 
-              store: store, 
-              styleOptions: styleOptions, 
-              activityMiddleware: activityMiddleware,
-              locale: 'ko-KR' 
-            },
-            document.getElementById('webchat')
-          );
+          try {
+            const directLine = window.WebChat.createDirectLine({ token: directLineSecret });
+            window.WebChat.renderWebChat(
+              { directLine, store, styleOptions, activityMiddleware, locale: 'ko-KR' },
+              document.getElementById('webchat')
+            );
+          } catch (error) {
+            console.error("채팅 로딩 실패:", error);
+            alert("채팅 연결에 실패했습니다. 키가 만료되었거나 설정 오류일 수 있습니다.");
+          }
         }
       </script>
   
