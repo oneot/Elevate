@@ -789,8 +789,8 @@
         }
     
         async function loadChat() {
-          // Secret Key (보내주신 키 적용)
-          const directLineSecret = 'rgfpuYupIP27STK2v0C7jCiBORlq63G3nyUj9Zan58rAp3HAWuSCJQQJ99CBACi5YpzAArohAAABAZBS2kCv.BHfCuXJnH5X8ciQJPMrhYemii9NlbNfkuOoGSIerwxznceY2y0uiJQQJ99CBACi5YpzAArohAAABAZBS1asc';
+          // Secret Key
+          const directLineSecret = 'REPLACE_MY_SECRET_KEY';
     
           // 봇에게 "시작(startConversation)" 이벤트를 보내는 스토어
           const store = window.WebChat.createStore({}, ({ dispatch }) => next => action => {
