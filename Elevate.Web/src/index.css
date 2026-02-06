@@ -132,3 +132,14 @@ body {
     transform: translateX(0) !important;
   }
 }
+
+/* Stronger shadow override for BlogCard */
+.clean-card.blog-card-strong {
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.32);
+}
+
+.clean-card.blog-card-strong:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.48);
+  border-color: #0078D4;
+}
