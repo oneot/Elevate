@@ -8,6 +8,7 @@ import Logo from '../components/Logo';
 import TagFilter from '../components/TagFilter';
 
 const DISPLAY_NAMES = {
+  all: 'ALL',
   m365: 'M365',
   copilot: 'Copilot',
   minecraft: 'Minecraft',
@@ -55,7 +56,12 @@ export default function PostList() {
         setAllTags(data.allTags || []);
 
         // Client-side filtering by category
-        const filtered = allItems.filter((p) => p.category === category);
+        let filtered;
+        if (category === 'all') {
+          filtered = allItems;
+        } else {
+          filtered = allItems.filter((p) => p.category === category);
+        }
         setAllPosts(filtered);
       } catch (err) {
         if (err.name === 'AbortError') return;
