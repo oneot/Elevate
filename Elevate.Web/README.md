@@ -42,7 +42,7 @@ npm run build
 - 아키텍처 상세: `ARCHITECTURE.md`
 - 컴포넌트 설명: `COMPONENTS.md`
 
-## 기여 / Contributing!
+## 기여 / Contributing
 
 간단한 기여 방법:
 
