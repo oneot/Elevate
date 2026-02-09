@@ -24,7 +24,8 @@ export default function PostList() {
   const { category } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const pageParam = parseInt(searchParams.get('page') || '1', 10);
-  const PAGE_SIZE = 9;
+  // Show more posts per page to reduce pagination churn
+  const PAGE_SIZE = 20;
 
   // Parse selected tags from URL query param
   const tagsParam = searchParams.get('tags') || '';
@@ -98,7 +99,8 @@ export default function PostList() {
   // Paginate filtered posts
   const total = filteredPosts.length;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-  const start = (pageParam - 1) * PAGE_SIZE;
+  const currentPage = Math.min(Math.max(pageParam, 1), totalPages);
+  const start = (currentPage - 1) * PAGE_SIZE;
   const posts = filteredPosts.slice(start, start + PAGE_SIZE);
 
   const updateUrlParams = (params) => {
@@ -177,13 +179,13 @@ export default function PostList() {
 
         <section className="w-full lg:col-span-10">
           {loading && <div className="text-center py-8">로딩 중...</div>}
-          {!loading && selectedTags.length > 0 && (
-            <div className="mb-4 text-sm text-slate-600">
-              {filteredPosts.length}개의 게시글이 선택된 태그와 일치합니다.
-            </div>
-          )}
+          <div className="mb-4 text-sm text-slate-600 min-h-[24px] flex items-center">
+            {!loading && selectedTags.length > 0 && (
+              <span>{filteredPosts.length}개의 게시글이 선택된 태그와 일치합니다.</span>
+            )}
+          </div>
           <PostGrid posts={posts} />
-          <Pagination currentPage={pageParam} totalPages={totalPages} onPageChange={handlePageChange} />
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
         </section>
       </div>
     </main>
