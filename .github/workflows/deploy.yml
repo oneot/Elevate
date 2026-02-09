@@ -1,52 +1,70 @@
-name: Deploy static content to Pages
+name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: ["main"]  # main 브랜치에 코드가 올라오면 실행
+    push:
+        branches: [main]
+    workflow_dispatch:
 
-# 권한 설정
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+    contents: read
+    pages: write
+    id-token: write
 
-# 배포 작업
+concurrency:
+    group: pages
+    cancel-in-progress: true
+
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    build:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: Elevate.Web
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with: 
-          node-version: 18
-          cache: 'npm'
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+                  cache-dependency-path: Elevate.Web/package-lock.json
 
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Build
+              run: npm run build
 
-      - name: Convert blog posts
-        run: npm run generate-posts
+            - name: Build posts
+              run: npm run generate-posts
 
-      # 🌟 [핵심] 코드 내의 임시 문구를 진짜 시크릿 키로 교체하는 단계
-      - name: Inject Secret Key
-        run: |
-          # index.html 파일에서 'REPLACE_MY_SECRET_KEY'를 찾아서 GitHub Secret으로 바꿈
-          sed -i 's|REPLACE_MY_SECRET_KEY|${{ secrets.DIRECT_LINE_SECRET }}|g' index.html
-        # ⚠️ 만약 HTML 파일명이 index.html이 아니라면 위 이름을 수정하세요!
+            - name: Include CNAME
+              run: cp ../CNAME dist/
 
-      # ⭐ build 폴더만 업로드
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './build'
+            - name: Add SPA fallback
+              run: cp dist/index.html dist/404.html
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+            - name: Setup Pages
+              uses: actions/configure-pages@v5
+
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: Elevate.Web/dist
+
+    deploy:
+        needs: build
+        runs-on: ubuntu-latest
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        permissions:
+            contents: read
+            pages: write
+            id-token: write
+        steps:
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4
