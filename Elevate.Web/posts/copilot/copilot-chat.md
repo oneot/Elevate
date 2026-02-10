@@ -1,0 +1,84 @@
+title: M365 Copilot과 채팅하기
+tags: [copilot, ai, tutorial]
+date: 2026-01-26
+excerpt: M365 Copilot 사용하기
+---
+>시나리오<br>
+> - ['/' 활용한 자료 첨부] 작년에 사용했던 학습지를 올해 학생들의 수준or교육과정 개편에 맞추어서 편집하고자 하는 경우
+> - '/'로 작년에 사용했던 학습지 첨부
+> - 올해 학생들 수준 파악 (수행평가 등의 수치 분석 정도 -> 이건 더 딥하게 사용 가능
+
+
+# STEP 0. START
+
+이 시나리오는 MS365 Copilot을 사용하여 진행됩니다. 
+
+개인 계정으로 접속한 경우, 학교 계정으로 가입/접속하는 것부터 먼저 진행해주세요!
+
+- 학교 계정으로 로그인 하러 가기   
+
+![image](/images/m365Copilot/copilotChat/img1.png)
+
+![image](/images/m365Copilot/copilotChat/img2.png)
+
+[아직 계정이 없다면?] [학교 계정 만들러가기](https://microsoft-elevate.com/)
+
+# STEP 1. Copilot 새로운 Chat 열기
+
+진행 중인 채팅이 있다면, 우측 상단에서 '새로 만들기'를 해주세요.
+
+![image](/images/m365Copilot/copilotChat/img3.png)
+
+# STEP 2. 프롬프트 작성
+
+아래에는 제가 예시로 작성한 프롬프트예요. 이를 참고하여 원하는 자리 배치 방식에 대한 소요 시간, 준비물 조건 등을 작성해주세요!
+
+> 난  중학교 3학년 선생님이야. 내가 담당하는 학급은 20명으로 구성되어 있는데, 매달 자리를 바꿀거야. 이때, 재미있는 게임을 사용하고 싶은데 네가 추천해줬으면 좋겠어. 게임을 진행할 때 필요한 물품은 최소였으면 좋겠고, 10분 내로 끝내고 싶어. 아이들이 자리를 뽑는 게 최대한 랜덤이었으면 좋겠어
+
+![image](/images/m365Copilot/copilotChat/img4.png)
+
+# STEP 3. 결과 확인
+
+여러 가지 게임을 제안해줬는데, 이 중 마음에 드는 방식을 고릅니다.
+
+![image](/images/m365Copilot/copilotChat/img5.png)
+
+
+# STEP4. 준비물 제작
+
+제안해준 게임이 마음에 들었다면, 이제 우리 반 학생들에게 사용할 수 있는 자료를 준비할거예요. 학생들의 이름을 입력하고 자료를 요청해보세요.
+
+- M365 Copilot은 [엔터프라이즈 데이터 보호](https://learn.microsoft.com/ko-kr/copilot/microsoft-365/enterprise-data-protection)가 적용되기 때문에 학생 데이터를 안전하게 사용할 수 있어요!
+- Copilot이 도움이 될 여러 방식을 추천해주기도 해요! 
+
+![image](/images/m365Copilot/copilotChat/img6.png)
+
+- 학생들의 이름이 적힌 파일이 있다면 + 버튼으로 찾고 바로 업로드할 수도 있어요!
+
+![image](/images/m365Copilot/copilotChat/img7.png)
+
+- Tip! '/'를 사용하면 바로 파일을 검색할 수 있어요
+
+![image](/images/m365Copilot/copilotChat/img8.png)
+
+- 파일을 첨부하고, 준비물을 요청할거예요.
+
+![image](/images/m365Copilot/copilotChat/img9.png)
+
+- Tip! 한글이 깨지는 경우 PPTX 파일로 요청하면 원활하게 프린트할 수 있어요!
+
+![image](/images/m365Copilot/copilotChat/img10.png)
+
+![image](/images/m365Copilot/copilotChat/img11.png)
+
+# STEP5. 마무리
+
+학급에 대한 정보를 담은 에이전트를 만들면 매번 일일이 학급의 정보를 입력하지 않고 사용할 수 있어요. 
+
+- 에이전트를 활용한 시나리오 더 알아보기 [링크 삽입]
+
+이 외에도 Copilot Chat을 활용해 다양한 걸 해볼 수 있어요!웹에서 원하는 정보 서칭하기
+
+- 회의 내용 정리하기
+- URL 데이터 분석하기
+
