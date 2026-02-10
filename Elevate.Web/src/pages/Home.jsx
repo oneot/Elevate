@@ -12,6 +12,7 @@ import Navigation from '../components/Navigation';
 import MapSection from '../components/MapSection';
 import CopilotStudioSection from '../components/CopilotStudioSection';
 import Footer from '../components/Footer';
+import ChatWidget from '../components/ChatWidget';
 
 // Hooks
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
@@ -159,6 +160,7 @@ const Home = () => {
             <CopilotStudioSection />
 
             <Footer />
+            <ChatWidget />
         </div>
     );
 };
