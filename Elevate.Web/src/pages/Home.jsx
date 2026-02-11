@@ -12,6 +12,7 @@ import Navigation from '../components/Navigation';
 import MapSection from '../components/MapSection';
 import CopilotStudioSection from '../components/CopilotStudioSection';
 import Footer from '../components/Footer';
+import ChatWidget from '../components/ChatWidget';
 
 // Hooks
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
@@ -55,7 +56,8 @@ const Home = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-auto sm:auto-rows-[240px]">
                     {/* Copilot */}
-                    <Link to="/blog/copilot" className="col-span-1 lg:col-span-1 row-span-1 lg:row-span-2 block h-full">
+                    {/* ✅ 수정됨: sm:row-span-2 적용 (모바일 가로모드/태블릿부터 2칸 차지) */}
+                    <Link to="/blog/copilot" className="col-span-1 row-span-1 sm:row-span-2 block h-full">
                         <div className="reveal-card clean-card rounded-[2.5rem] p-8 relative overflow-hidden group cursor-pointer fade-in-section h-full bg-gradient-to-br from-white via-white to-blue-50 shadow-soft hover:shadow-hover transition-all duration-300">
                             <div className="relative z-10 flex flex-col h-full justify-between">
                             <div>
@@ -159,6 +161,7 @@ const Home = () => {
             <CopilotStudioSection />
 
             <Footer />
+            <ChatWidget />
         </div>
     );
 };
