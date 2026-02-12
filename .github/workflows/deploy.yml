@@ -36,6 +36,8 @@ jobs:
 
             - name: Build
               run: npm run build
+              env:
+                VITE_DIRECT_LINE_SECRET: ${{ secrets.DIRECT_LINE_SECRET }}
 
             - name: Build posts
               run: npm run generate-posts
