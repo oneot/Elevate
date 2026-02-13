@@ -5,7 +5,7 @@ const KoreaMap = ({ hoveredRegion, onPointEnter, onPointMove, onPointLeave, onPo
     const points = [
         { key: "Seoul", cx: 397, cy: 233, r: 12 },
         { key: "Incheon", cx: 355, cy: 247, r: 8 },
-        { key: "Gyeonggi", cx: 448, cy: 271, r: 15, style: { opacity: 0.5 } },
+        { key: "Gyeonggi", cx: 448, cy: 271, r: 12},
         { key: "Gangwon", cx: 567, cy: 195, r: 10 },
         { key: "Sejong", cx: 416, cy: 400, r: 8 },
         { key: "Chungbuk", cx: 481, cy: 362, r: 8 },

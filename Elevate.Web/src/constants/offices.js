@@ -13,10 +13,10 @@ export const offices = {
     Ulsan: "https://o365.use.go.kr",
     Busan: "https://o365.pen.go.kr",
     Gyeongnam: "https://sw-ms.gne.go.kr",
-    Jeonbuk: "https://getsw.jbe.go.kr",
-    Jeonnam: "https://o365.jne.go.kr/",
+    Jeonbuk: "https://getsw-s.jbe.go.kr",
+    Jeonnam: "https://o365.jne.go.kr",
     Gwangju: "https://o365.gen.go.kr",
-    JeJu: "https://o365.jje.go.kr/",
+    JeJu: "https://o365.jje.go.kr",
 };
 
 // 교육청 한글 이름

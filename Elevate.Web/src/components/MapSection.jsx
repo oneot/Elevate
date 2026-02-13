@@ -43,7 +43,17 @@ const MapSection = () => {
         const url = normalizeUrl(offices[key]);
 
         if (!url) return;
-        if (window.confirm(`${name} M365 지원 페이지로 이동하여\n계정 문제를 해결하시겠습니까?`)) {
+
+        // ✅ 모바일(터치 스크린)인지 확인
+        const isMobile = window.matchMedia("(pointer: coarse)").matches;
+
+        if (isMobile) {
+            // 📱 모바일: 확인창 띄우기 (오터치 방지)
+            if (window.confirm(`${name} 페이지로 이동하시겠습니까?`)) {
+                window.open(url, "_blank", "noopener,noreferrer");
+            }
+        } else {
+            // 💻 PC: 묻지 않고 바로 이동 (빠른 탐색)
             window.open(url, "_blank", "noopener,noreferrer");
         }
     };
